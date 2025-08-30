@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>防红系统 - 生成防红链接</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1 class="title">防红链接生成系统</h1>
+      <div class="form-group">
+        <label for="target-url">目标链接：</label>
+        <input type="url" id="target-url" placeholder="请输入目标网址" required>
+      </div>
+      <button class="btn-primary" id="generate-link">生成防红链接</button>
+      <div class="result" id="result" style="display:none;">
+        <p>防红链接：<a id="result-url" href="" target="_blank">点击访问</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('generate-link').addEventListener('click', function() {
+      const url = document.getElementById('target-url').value;
+      if (!url) {
+        alert('请输入目标网址');
+        return;
+      }
+
+      fetch('create_link.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `url=${encodeURIComponent(url)}`
+      })
+      .then(response => response.text())
+      .then(link => {
+        document.getElementById('result-url').href = link;
+        document.getElementById('result-url').textContent = link;
+        document.getElementById('result').style.display = 'block';
+      })
+      .catch(error => {
+        alert('生成防红链接失败，请稍后再试。');
+      });
+    });
+  </script>
+</body>
+</html>
